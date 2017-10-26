@@ -35,7 +35,7 @@ def getBreweries():
         for beer in brewery.beers.all():
             beersOfBrewery = []
             beersOfBrewery.append(beer.name)
-        for style in brewery.styles.all():
+        for style in brewery.styles:
             stylesOfBrewery = []
             stylesOfBrewery.append(style.name)
 
@@ -55,7 +55,7 @@ def getBreweries():
             }
         allBreweries.append(b)
     
-    response = jsonify(allBreweriesweries)
+    response = jsonify(allBreweries)
     response.status_code = 200
 
     return response
@@ -95,9 +95,9 @@ def getStyles():
         for beer in style.beers.all():
             beersOfStyle = []
             beersOfStyle.append(beer.name)
-        # for brewery in db.session.query(Brewery).filter(Style.breweries.any(id=style.id)).all():
-        #     breweriesOfStyle = []
-        #     breweriesOfStyle.append(brewery.name)
+        for brewery in db.session.query(Brewery).filter(Style.breweries.any(id=style.id)).all():
+            breweriesOfStyle = []
+            breweriesOfStyle.append(brewery.name)
 
         s = {
         'id' : style.id,
@@ -107,8 +107,8 @@ def getStyles():
         'ibu_max' : style.ibu_max,
         'abv_min' : style.abv_min,
         'abv_max' : style.abv_max,
-        'beers' : beersOfStyle#,
-        #'breweries':breweriesOfStyle
+        'beers' : beersOfStyle,
+        'breweries':breweriesOfStyle
         }
         allStyles.append(s)
 
