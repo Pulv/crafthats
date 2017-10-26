@@ -35,9 +35,9 @@ def getBreweries():
         for beer in brewery.beers.all():
             beersOfBrewery = []
             beersOfBrewery.append(beer.name)
-        for style in db.session.query(Style).filter(Style.breweries.any(id=brewery.id)).all():
-            stylesOfBrewery = []
-            stylesOfBrewery.append(style.name)
+        # for style in db.session.query(Style).filter(Style.breweries.any(id=brewery.id)).all():
+        #     stylesOfBrewery = []
+        #     stylesOfBrewery.append(style.name)
 
         #to do styles!
         
@@ -50,8 +50,8 @@ def getBreweries():
             'established': brewery.established,
             'description': brewery.description,
             'beers' : beersOfBrewery,
-            'images' : brewery.images,
-            'styles' : stylesOfBrewery
+            'images' : brewery.images#,
+            #'styles' : stylesOfBrewery
             }
         allBreweries.append(b)
     
@@ -96,9 +96,9 @@ def getStyles():
         for beer in style.beers.all():
             beersOfStyle = []
             beersOfStyle.append(beer.name)
-        for brewery in db.session.query(Brewery).filter(Style.breweries.any(id=style.id)).all():
-            breweriesOfStyle = []
-            breweriesOfStyle.append(brewery.name)
+        # for brewery in db.session.query(Brewery).filter(Style.breweries.any(id=style.id)).all():
+        #     breweriesOfStyle = []
+        #     breweriesOfStyle.append(brewery.name)
 
         s = {
         'id' : style.id,
@@ -108,8 +108,8 @@ def getStyles():
         'ibu_max' : style.ibu_max,
         'abv_min' : style.abv_min,
         'abv_max' : style.abv_max,
-        'beers' : beersOfStyle,
-        'breweries':breweriesOfStyle
+        'beers' : beersOfStyle#,
+        #'breweries':breweriesOfStyle
         }
         allStyles.append(s)
 
@@ -138,7 +138,7 @@ def getReviews():
     response.status_code = 200
 
     return response
-
+@app.route('/beers/<id>', methods = ['GET'])
 @app.errorhandler(500)
 def server_error(e):
     logging.exception('An error occurred during a request.')
