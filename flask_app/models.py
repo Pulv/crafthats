@@ -3,9 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
-association_table = db.Table('association', db.metadata,
-    db.Column('brewery_id',db.ForeignKey('brewery.id'), primary_key=True),
-    db.Column('style_id',db.ForeignKey('style.id'),primary_key=True)
+association_table = db.Table('association',
+    db.Column('brewery_id',db.Integer,db.ForeignKey('brewery.id')),
+    db.Column('style_id',db.Integer, db.ForeignKey('style.id'),)
 )
 
 class Beer (db.Model):
@@ -32,7 +32,7 @@ class Brewery (db.Model):
     description = db.Column(db.String(200))
     beers = db.relationship("Beer", backref="brewery", lazy="dynamic")
     images = db.Column(db.String(80))
-    styles = db.relationship("Style",secondary=association_table, back_populates='breweries')
+    styles = db.relationship("Style",secondary=association_table, backref=db.backref('breweries', lazy='dynamic'))
 
 
 class Style (db.Model):
@@ -46,7 +46,6 @@ class Style (db.Model):
     abv_max = db.Column(db.String(8))
     
     beers = db.relationship("Beer", backref="style", lazy='dynamic')
-    breweries = db.relationship("Brewery",secondary=association_table, back_populates='styles')
 
 
 class Review (db.Model):
