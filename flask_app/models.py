@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
-association_table = db.Table('association', db.Model.metadata,
+association_table = db.Table('association', db.metadata,
     db.Column('brewery_id',db.ForeignKey('brewery.id'), primary_key=True),
     db.Column('style_id',db.ForeignKey('style.id'),primary_key=True)
 )
