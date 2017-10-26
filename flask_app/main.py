@@ -24,7 +24,7 @@ def home():
     # x = db.session.query(Beer).all()
     return "hello world"
 
-@app.route('/breweries')
+@app.route('/breweries', methods=['GET'])
 def getBreweries():
     
     allBreweries = []
@@ -35,9 +35,9 @@ def getBreweries():
         for beer in brewery.beers.all():
             beersOfBrewery = []
             beersOfBrewery.append(beer.name)
-        # for style in db.session.query(Style).filter(Style.breweries.any(id=brewery.id)).all():
-        #     stylesOfBrewery = []
-        #     stylesOfBrewery.append(style.name)
+        for style in brewery.styles.all():
+            stylesOfBrewery = []
+            stylesOfBrewery.append(style.name)
 
         #to do styles!
         
@@ -55,7 +55,7 @@ def getBreweries():
             }
         allBreweries.append(b)
     
-    response = jsonify(allBreweries)
+    response = jsonify(allBreweriesweries)
     response.status_code = 200
 
     return response
@@ -90,8 +90,7 @@ def getBeers():
 def getStyles():
     allStyles = []
 
-    styles = db.session.query(Style).all()
-   # breweriesOfStyle = Brewery.query.join(Brewery.styles).filter(style.id==)
+    styles = db.session.query(Style).all()  
     for style in styles:
         for beer in style.beers.all():
             beersOfStyle = []
@@ -130,7 +129,7 @@ def getReviews():
         'date': review.date,
         'rating' : review.rating,
         'comment' : review.comment,
-        'beer_name' : Beer.query.filter_by(id=review.beer_name).first.name()
+        'beer_name' : Beer.query.filter_by(id=review.beer_name).first().name
         }
         allReviews.append(r)
 
@@ -139,6 +138,7 @@ def getReviews():
 
     return response
 @app.route('/beers/<id>', methods = ['GET'])
+def getBeerInfo(id)
 @app.errorhandler(500)
 def server_error(e):
     logging.exception('An error occurred during a request.')
