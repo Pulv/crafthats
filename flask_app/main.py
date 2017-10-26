@@ -35,6 +35,9 @@ def getBreweries():
         for beer in brewery.beers.all():
             beersOfBrewery = []
             beersOfBrewery.append(beer.name)
+        for style in db.session.query(Style).filter(Style.breweries.any(id=brewery.id)).all():
+            stylesOfBrewery = []
+            stylesOfBrewery.append(style.name)
 
         #to do styles!
         
@@ -47,7 +50,8 @@ def getBreweries():
             'established': brewery.established,
             'description': brewery.description,
             'beers' : beersOfBrewery,
-            'images' : brewery.images
+            'images' : brewery.images,
+            'styles' : stylesOfBrewery
             }
         allBreweries.append(b)
     
@@ -87,11 +91,14 @@ def getStyles():
     allStyles = []
 
     styles = db.session.query(Style).all()
-
+   # breweriesOfStyle = Brewery.query.join(Brewery.styles).filter(style.id==)
     for style in styles:
         for beer in style.beers.all():
             beersOfStyle = []
             beersOfStyle.append(beer.name)
+        for brewery in db.session.query(Brewery).filter(Style.breweries.any(id=style.id)).all():
+            breweriesOfStyle = []
+            breweriesOfStyle.append(brewery.name)
 
         s = {
         'id' : style.id,
@@ -101,7 +108,8 @@ def getStyles():
         'ibu_max' : style.ibu_max,
         'abv_min' : style.abv_min,
         'abv_max' : style.abv_max,
-        'beers' : beersOfStyle
+        'beers' : beersOfStyle,
+        'breweries':breweriesOfStyle
         }
         allStyles.append(s)
 

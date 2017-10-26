@@ -3,9 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
-association_table = db.Table('association',
-    db.Column('brewery_id', db.Integer, db.ForeignKey('brewery.id')),
-    db.Column('style_id', db.Integer, db.ForeignKey('style.id'))
+association_table = db.Table('association', db.Model.metadata,
+    db.Column('brewery_id',db.ForeignKey('brewery.id'), primary_key=True),
+    db.Column('style_id',db.ForeignKey('style.id'),primary_key=True)
 )
 
 class Beer (db.Model):
@@ -32,8 +32,7 @@ class Brewery (db.Model):
     description = db.Column(db.String(200))
     beers = db.relationship("Beer", backref="brewery", lazy="dynamic")
     images = db.Column(db.String(80))
-    #reviews = db.relationship("Review", backref="brewery", lazy='dynamic')
-    styles = db.relationship("Style",secondary=association_table, backref=db.backref('brewery',lazy='dynamic'))
+    styles = db.relationship("Style",secondary=association_table, back_populates='breweries')
 
 
 class Style (db.Model):
@@ -47,7 +46,7 @@ class Style (db.Model):
     abv_max = db.Column(db.String(8))
     
     beers = db.relationship("Beer", backref="style", lazy='dynamic')
-    breweries = db.relationship("Brewery",secondary=association_table, backref=db.backref('styles',lazy='dynamic')) # IS THIS RIGHT?
+    breweries = db.relationship("Brewery",secondary=association_table, back_populates='styles')
 
 
 class Review (db.Model):
