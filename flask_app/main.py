@@ -137,8 +137,80 @@ def getReviews():
     response.status_code = 200
 
     return response
-@app.route('/beers/<id>', methods = ['GET'])
-def getBeerInfo(id)
+@app.route('/beers/<int:beer_id>', methods = ['GET'])
+def getBeerInfo(beer_id):
+    beer = db.session.query(Beer).filter_by(id=beer_id).first()
+    b = {
+        'name' : beer.name,
+        'organic' : beer.organic,
+        'abv'  : beer.abv,
+        'ibu'  : beer.ibu,
+        'images' :beer.images,
+        'brewery' : Brewery.query.filter_by(id=beer.brewery_id).first().name,
+        'style' : Style.query.filter_by(id=beer.style_id).first().name
+    }
+    response = jsonify(b)
+    response.status = 200
+
+    return response
+
+@app.route('/breweries/<int:brewery_id>', methods = ['GET'])
+def getBreweryInfo(brewery_id):
+    brewery = db.session.query(Brewery).filter_by(id=brewery_id).first()
+    b = { 
+        'id' : brewery.id,
+        'name' : brewery.name,
+        'city' : brewery.city,
+        'state':brewery.state,
+        'country' : brewery.country,
+        'established': brewery.established,
+        'description': brewery.description,
+        'beers' : beersOfBrewery,
+        'images' : brewery.images,
+        'styles' : stylesOfBrewery
+    }
+    response = jsonify(b)
+    response.status = 200
+
+    return response
+
+@app.route('/styles/<int:style_id>', methods = ['GET'])
+def getStyleInfo(style_id):
+    style = db.session.query(Style).filter_by(id=style_id).first()
+    s ={
+        'id' : style.id,
+        'name' : style.name,
+        'desicription' : style.description,
+        'ibu_min' : style.ibu_min,
+        'ibu_max' : style.ibu_max,
+        'abv_min' : style.abv_min,
+        'abv_max' : style.abv_max,
+        'beers' : beersOfStyle,
+        'breweries':breweriesOfStyle
+    }
+    response = jsonify(s)
+    response.status = 200
+
+    return response
+@app.route('/reviewsForBeer/<int:beer_id>')
+def getReviewsForABeer(beer_id):
+    
+    beer = db.session.query(Beer).filter_by(id=beer_id).first()
+    beerReviews = []
+    for review in beer.reviews.all():
+        r = {
+                'id' : review.id,
+                'date': review.date,
+                'rating' : review.rating,
+                'comment' : review.comment
+            }
+        beerReviews.append(r)
+
+    response = jsonify(beerReviews)
+    response.status = 200
+
+    return response
+
 @app.errorhandler(500)
 def server_error(e):
     logging.exception('An error occurred during a request.')
