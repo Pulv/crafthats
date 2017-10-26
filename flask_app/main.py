@@ -39,6 +39,7 @@ def getBreweries():
         #to do styles!
         
         b = {
+            'id' : brewery.id,
             'name' : brewery.name,
             'city' : brewery.city,
             'state':brewery.state,
@@ -66,6 +67,7 @@ def getBeers():
     for beer in beers:
         
         b = {
+         'id' : beer.id,
          'name' : beer.name,
          'organic' : beer.organic,
          'abv'  : beer.abv,
@@ -92,6 +94,7 @@ def getStyles():
             beersOfStyle.append(beer.name)
 
         s = {
+        'id' : style.id,
         'name' : style.name,
         'desicription' : style.description,
         'ibu_min' : style.ibu_min,
@@ -103,6 +106,27 @@ def getStyles():
         allStyles.append(s)
 
     response = jsonify(allStyles)
+    response.status_code = 200
+
+    return response
+
+@app.route('/reviews', methods = ['GET'])
+def getReviews():
+    allReviews = []
+
+    reviews = db.session.query(Review).all()
+
+    for review in reviews:
+        r = {
+        'id' : review.id,
+        'date': review.date,
+        'rating' : review.rating,
+        'comment' : review.comment,
+        'beer_name' : Beer.query.filter_by(id=review.beer_name).first.name()
+        }
+        allReviews.append(r)
+
+    response = jsonify(allReviews)
     response.status_code = 200
 
     return response
