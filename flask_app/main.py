@@ -95,7 +95,7 @@ def getStyles():
         for beer in style.beers.all():
             beersOfStyle = []
             beersOfStyle.append(beer.name)
-        for brewery in db.session.query(Brewery).filter(Style.breweries.any(id=style.id)).all():
+        for brewery in Style.query.filter(Style.breweries.any(id=style.id)).all()
             breweriesOfStyle = []
             breweriesOfStyle.append(brewery.name)
 
