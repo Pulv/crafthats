@@ -50,8 +50,8 @@ def getBreweries():
             'established': brewery.established,
             'description': brewery.description,
             'beers' : beersOfBrewery,
-            'images' : brewery.images#,
-            #'styles' : stylesOfBrewery
+            'images' : brewery.images,
+            'styles' : stylesOfBrewery
             }
         allBreweries.append(b)
     
